@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi IPTV Web</title>
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; text-align: center; }
+        video { width: 90%; height: auto; margin: 20px auto; display: block; }
+        select { padding: 10px; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <h1>Mi IPTV Web</h1>
+    <select id="channelSelector" onchange="changeChannel()">
+        <option value="">Selecciona un canal</option>
+        <option value="https://static.france24.com/live/F24_ES_LO_HLS/live_web.m3u8">France 24 Español</option>
+        <option value="https://dwstream3-lh.akamaihd.net/i/dwstream3_live@124556/index_1_av-p.m3u8">Deutsche Welle Inglés</option>
+        <option value="https://nasatv-lh.akamaihd.net/i/NASA_101@319270/master.m3u8">NASA TV</option>
+        <option value="https://live-hls-web-aja.getaj.net/AJA/index.m3u8">Al Jazeera English</option>
+        <option value="https://rakuten-euronews-2-es.samsung.wurl.tv/playlist.m3u8">Euronews Español</option>
+        <option value="https://rbmn-live.akamaized.net/hls/live/590964/Live_1/index.m3u8">Red Bull TV</option>
+    </select>
+
+    <video id="videoPlayer" controls autoplay></video>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        function changeChannel() {
+            const video = document.getElementById('videoPlayer');
+            const url = document.getElementById('channelSelector').value;
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+                video.addEventListener('loadedmetadata', function () {
+                    video.play();
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
